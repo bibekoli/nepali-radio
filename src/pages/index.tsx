@@ -21,7 +21,7 @@ export default function Index() {
     if (audioRef.current) {
       setIsPlaying(!audioRef.current.paused);
     }
-  }, [currentRadio.current]);
+  }, []);
 
   const handleNext = () => {
     setIsBuffering(true);
