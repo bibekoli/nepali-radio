@@ -1,115 +1,175 @@
+import { useRef, useState, useEffect } from "react";
+import { radios } from "@/data/radios";
 import Image from "next/image";
-import localFont from "next/font/local";
+import { useCurrentRadio } from "@/data/zustand"; 
+import Heart from "@/components/Heart";
+// import HeartSolid from "@/components/HeartSolid";
+import Previous from "@/components/Previous";
+import Play from "@/components/Play";
+import Stop from "@/components/Stop";
+import Next from "@/components/Next";
+import Sound from "@/components/Sound";
+import Spinner from "@/components/Spinner";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
+export default function Index() {
+  const currentRadio = useCurrentRadio();
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [isBuffering, setIsBuffering] = useState(true);
 
-export default function Home() {
+  useEffect(() => {
+    if (audioRef.current) {
+      setIsPlaying(!audioRef.current.paused);
+    }
+  }, [currentRadio.current]);
+
+  const handleNext = () => {
+    setIsBuffering(true);
+    const currentIndex = radios.findIndex((radio) => radio.id === currentRadio.current?.id);
+    const nextIndex = (currentIndex + 1) % radios.length;
+    currentRadio.setCurrent(radios[nextIndex]);
+  };
+  
+  const handlePrev = () => {
+    setIsBuffering(true);
+    const currentIndex = radios.findIndex((radio) => radio.id === currentRadio.current?.id);
+    const prevIndex = (currentIndex - 1 + radios.length) % radios.length;
+    currentRadio.setCurrent(radios[prevIndex]);
+  };
+  
+
+  const togglePlayPause = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      }
+      else {
+        audioRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
   return (
-    <div
-      className={`${geistSans.variable} ${geistMono.variable} grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]`}
-    >
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/pages/index.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="bg-gray-100 min-h-screen flex flex-col">
+      <header className="bg-white shadow-gray-900 p-4">
+        <div className="max-w-screen-xl w-full mx-auto flex items-center justify-between">
+          <h1 className="text-2xl font-[800] text-gray-900">BiTunes</h1>
+          <input 
+            type="text" 
+            placeholder="Search radio stations..." 
+            className="border border-gray-300 rounded-md px-4 py-2 w-1/3" 
+          />
+        </div>
+      </header>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      <main className="flex-1 max-w-screen-xl w-full mx-auto py-4 px-4">
+        <h2 className="text-xl font-bold text-gray-800 mb-4">Radio Stations</h2>
+        <div className="space-y-0 bg-white rounded-lg shadow-md mb-24">
+          {radios.map((radio) => (
+            <div
+              key={radio.id}
+              className="flex items-center hover:shadow-lg transition-shadow duration-300 p-4">
+              <div className="w-16 h-16 relative flex-shrink-0">
+                <Image
+                  src={`/logo/${radio.id}.jpg`}
+                  alt={radio.name}
+                  fill
+                  className="object-contain rounded-md"
+                />
+              </div>
+              <div className="ml-2 flex-1">
+                <h3 className="text-lg font-semibold text-gray-900 line-clamp-1">{radio.name}</h3>
+                <p className="text-sm text-gray-600">
+                  {
+                    radio.frequency ? `${radio.frequency} MHz` : "Online Radio"
+                  }
+                </p>
+              </div>
+              <div className="flex space-x-2">
+                <button
+                  className="flex items-center justify-center w-10 h-10 bg-red-500 rounded-full hover:bg-red-400 md:w-auto md:px-4"
+                  onClick={() => currentRadio.setCurrent(radio)}>
+                  <Heart className="text-white" />
+                  <span className="hidden md:inline ml-2 text-sm font-medium text-white">Favorite</span>
+                </button>
+                <button
+                  className="flex items-center justify-center w-10 h-10 bg-blue-500 rounded-full hover:bg-blue-400 md:w-auto md:px-4"
+                  onClick={() => {
+                    currentRadio.setCurrent(radio);
+                    audioRef.current?.play();
+                    setIsBuffering(true);
+                  }}>
+                  <Sound className="text-white" />
+                  <span className="hidden md:inline ml-2 text-sm font-medium text-white">Listen Now</span>
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+      {
+        currentRadio.current && (
+          <div
+            className="fixed bottom-0 left-0 right-0 bg-white p-4 flex items-center justify-between shadow-gray-900"
+            style={{
+              boxShadow: "0 -2px 4px rgba(0, 0, 0, 0.1)",
+            }}>
+            <div className="flex items-center justify-between max-w-screen-xl w-full mx-auto px-4">
+              <div className="flex items-center">
+                <Image 
+                  src={`/logo/${currentRadio.current.id}.jpg`} 
+                  alt={currentRadio.current.name} 
+                  width={60} 
+                  height={60} 
+                  className="object-cover rounded-md mr-4" 
+                />
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">{currentRadio.current.name}</h3>
+                  <p className="text-sm text-gray-600">
+                    {
+                      currentRadio.current.frequency ? `${currentRadio.current.frequency} MHz` : "Online Radio"
+                    }
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-center space-x-3">
+                <button 
+                  onClick={handlePrev} 
+                  className="bg-blue-500 text-white py-2 px-4 rounded-full hover:bg-blue-600">
+                  <Previous />
+                </button>
+
+                <button 
+                  onClick={togglePlayPause} 
+                  className="bg-blue-500 text-white p-3 rounded-full hover:bg-blue-600 h-12 w-12 flex items-center justify-center">
+                  {
+                    isBuffering ? <Spinner className="animate-spin" /> : isPlaying ? <Stop /> : <Play />
+                  }
+                </button>
+
+                <button 
+                  onClick={handleNext} 
+                  className="bg-blue-500 text-white py-2 px-4 rounded-full hover:bg-blue-600">
+                  <Next />
+                </button>
+              </div>
+              <audio 
+                ref={audioRef} 
+                src={currentRadio.current.streamUrl} 
+                autoPlay
+                hidden
+                onPlay={() => setIsPlaying(true)}
+                onPause={() => setIsPlaying(false)}
+                onPlaying={() => setIsBuffering(false)} 
+                onWaiting={() => setIsBuffering(true)}
+              />
+            </div>
+          </div>
+        )
+      }
     </div>
   );
 }
