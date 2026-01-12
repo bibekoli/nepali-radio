@@ -50,7 +50,7 @@ export default function SearchInput({
       transition={{ duration: 0.2 }}
     >
       <div className="relative w-full">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+        <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-red-400 w-5 h-5" />
         <input
           type="text"
           value={localValue}
@@ -59,10 +59,10 @@ export default function SearchInput({
           onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
           className={cn(
-            "w-full pl-10 pr-10 py-3 bg-slate-700/50 border border-slate-600 rounded-xl text-white",
-            "focus:outline-none focus:ring-2 focus:ring-sky-500 focus:border-transparent",
-            "transition-all duration-200 placeholder-slate-400",
-            isFocused && "shadow-lg bg-slate-700/70"
+            "w-full pl-12 pr-12 py-3.5 bg-white border-2 border-gray-200 rounded-xl text-gray-900 font-medium",
+            "focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent",
+            "transition-all duration-200 placeholder-gray-400",
+            isFocused && "shadow-red-md border-red-300"
           )}
         />
         <AnimatePresence>
@@ -72,9 +72,9 @@ export default function SearchInput({
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
               onClick={handleClear}
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-200 transition-colors"
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-red-500 transition-colors"
             >
-              <X className="w-4 h-4" />
+              <X className="w-5 h-5" />
             </motion.button>
           )}
         </AnimatePresence>

@@ -11,13 +11,13 @@ interface ButtonProps extends Omit<HTMLMotionProps<"button">, 'children'> {
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'md', isLoading, children, disabled, ...props }, ref) => {
-    const baseClasses = "inline-flex items-center justify-center rounded-full font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
+    const baseClasses = "inline-flex items-center justify-center rounded-xl font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
     
     const variants = {
-      primary: "bg-gradient-to-r from-sky-500 to-orange-500 hover:from-sky-600 hover:to-orange-600 text-white shadow-lg hover:shadow-xl focus:ring-sky-500",
-      secondary: "bg-slate-700 hover:bg-slate-600 text-white border border-slate-600 shadow-sm hover:shadow-md focus:ring-slate-500",
-      ghost: "hover:bg-slate-700/50 text-slate-300 hover:text-white focus:ring-slate-500",
-      danger: "bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white shadow-lg hover:shadow-xl focus:ring-red-500"
+      primary: "bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white shadow-red-lg hover:shadow-red-xl focus:ring-red-500",
+      secondary: "bg-white hover:bg-gray-50 text-gray-900 border-2 border-gray-200 hover:border-red-300 shadow-sm hover:shadow-md focus:ring-red-500",
+      ghost: "hover:bg-red-50 text-gray-600 hover:text-red-600 focus:ring-red-500",
+      danger: "bg-gradient-to-br from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white shadow-red-lg hover:shadow-red-xl focus:ring-red-600"
     };
     
     const sizes = {

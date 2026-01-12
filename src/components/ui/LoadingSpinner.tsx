@@ -20,9 +20,9 @@ export default function LoadingSpinner({
   };
 
   const colors = {
-    primary: 'border-sky-500',
+    primary: 'border-red-500',
     white: 'border-white',
-    gray: 'border-slate-400'
+    gray: 'border-gray-400'
   };
 
   return (
@@ -55,15 +55,17 @@ export function LoadingState({ message = "Loading...", className }: LoadingState
       animate={{ opacity: 1 }}
       className={cn("flex flex-col items-center justify-center p-8 min-h-screen", className)}
     >
-      <LoadingSpinner size="lg" color="primary" />
-      <motion.p
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="mt-4 text-slate-300 text-sm"
-      >
-        {message}
-      </motion.p>
+      <div className="bg-white rounded-3xl p-12 shadow-red-lg border border-red-100">
+        <LoadingSpinner size="lg" color="primary" />
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="mt-6 text-gray-700 text-base font-medium"
+        >
+          {message}
+        </motion.p>
+      </div>
     </motion.div>
   );
 }

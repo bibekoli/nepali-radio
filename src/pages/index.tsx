@@ -107,19 +107,20 @@ export default function Index() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+      <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-red-50">
         <LoadingState message="Loading radio stations..." />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-orange-50">
       <Toaster position="top-right" toastOptions={{
         style: {
-          background: '#1e293b',
-          color: '#f1f5f9',
-          border: '1px solid #334155'
+          background: '#ffffff',
+          color: '#1f2937',
+          border: '1px solid #fecaca',
+          boxShadow: '0 4px 12px rgba(220, 38, 38, 0.1)'
         }
       }} />
 
@@ -127,24 +128,24 @@ export default function Index() {
       <motion.header
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="bg-slate-800/90 backdrop-blur-lg border-b border-slate-700 sticky top-0 z-40"
+        className="bg-white/80 backdrop-blur-xl border-b border-red-100 sticky top-0 z-40 shadow-lg"
       >
-        <div className="max-w-7xl mx-auto px-4 py-4">
+        <div className="max-w-7xl mx-auto px-4 py-5">
           <div className="flex items-center justify-between">
             <motion.div
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.1 }}
-              className="flex items-center space-x-3"
+              className="flex items-center space-x-4"
             >
-              <div className="w-12 h-12 bg-gradient-to-r from-sky-500 to-orange-500 rounded-xl flex items-center justify-center shadow-lg">
-                <RadioIcon className="w-7 h-7 text-white" />
+              <div className="w-14 h-14 bg-gradient-to-br from-red-500 to-red-600 rounded-2xl flex items-center justify-center shadow-red-lg">
+                <RadioIcon className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-sky-400 to-orange-400 bg-clip-text text-transparent">
+                <h1 className="text-3xl font-bold gradient-text">
                   BiTunes
                 </h1>
-                <p className="text-sm text-slate-300">Nepali Radio Stations</p>
+                <p className="text-sm text-gray-600 font-medium">Listen Nepali Radio</p>
               </div>
             </motion.div>
 
@@ -171,7 +172,7 @@ export default function Index() {
                 variant="ghost"
                 size="sm"
                 onClick={toggleShowFavoritesOnly}
-                className={`text-slate-300 hover:text-orange-400 ${showFavoritesOnly ? "text-orange-400" : ""}`}
+                className={`text-gray-600 hover:text-red-600 transition-colors ${showFavoritesOnly ? "text-red-600 bg-red-50" : ""}`}
               >
                 <Heart className={`w-4 h-4 mr-2 ${showFavoritesOnly ? 'fill-current' : ''}`} />
                 Favorites {favorites.length > 0 && `(${favorites.length})`}
@@ -186,14 +187,14 @@ export default function Index() {
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.4 }}
-        className="max-w-7xl mx-auto px-4 py-6"
+        className="max-w-7xl mx-auto px-4 py-8"
       >
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-8">
           <div className="flex items-center space-x-4">
-            <h2 className="text-xl font-semibold text-white">
+            <h2 className="text-2xl font-bold text-gray-900">
               Radio Stations
-              <span className="ml-2 text-sm font-normal text-slate-400">
-                ({filteredRadios.length} stations)
+              <span className="ml-3 text-sm font-normal text-gray-500 bg-red-50 px-3 py-1 rounded-full">
+                {filteredRadios.length} stations
               </span>
             </h2>
 
@@ -202,7 +203,7 @@ export default function Index() {
                 variant="ghost"
                 size="sm"
                 onClick={clearFilters}
-                className="text-slate-400 hover:text-sky-400"
+                className="text-gray-500 hover:text-red-600 hover:bg-red-50"
               >
                 Clear filters ({activeFiltersCount})
               </Button>
@@ -213,7 +214,7 @@ export default function Index() {
             <select
               value={selectedProvince || ''}
               onChange={(e) => setSelectedProvince(e.target.value ? Number(e.target.value) : null)}
-              className="px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg text-sm text-white focus:outline-none focus:ring-2 focus:ring-sky-500"
+              className="px-4 py-2.5 bg-white border-2 border-gray-200 rounded-xl text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all hover:border-red-300 shadow-sm"
             >
               <option value="">All Provinces</option>
               {Object.entries(provinceNames).map(([id, name]) => (
@@ -224,7 +225,7 @@ export default function Index() {
         </div>
 
         {/* Radio Stations Grid */}
-        <div className="space-y-3 pb-32">
+        <div className="space-y-4 pb-32">
           <AnimatePresence mode="popLayout">
             {filteredRadios.length > 0 ? (
               filteredRadios.map((radio, index) => (
@@ -238,16 +239,22 @@ export default function Index() {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="text-center py-12"
+                className="text-center py-20"
               >
-                <RadioIcon className="w-16 h-16 text-slate-500 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-white mb-2">No stations found</h3>
-                <p className="text-slate-400 mb-4">
-                  {searchQuery ? `No stations match "${searchQuery}"` : 'No stations match your filters'}
-                </p>
-                <Button variant="ghost" onClick={clearFilters} className="text-slate-400 hover:text-sky-400">
-                  Clear all filters
-                </Button>
+                <div className="bg-white rounded-3xl p-12 shadow-lg max-w-md mx-auto border border-red-100">
+                  <RadioIcon className="w-20 h-20 text-red-300 mx-auto mb-6" />
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">No stations found</h3>
+                  <p className="text-gray-600 mb-6">
+                    {searchQuery ? `No stations match "${searchQuery}"` : 'No stations match your filters'}
+                  </p>
+                  <Button 
+                    variant="ghost" 
+                    onClick={clearFilters} 
+                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                  >
+                    Clear all filters
+                  </Button>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
@@ -260,25 +267,25 @@ export default function Index() {
           initial={{ y: 100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 100, opacity: 0 }}
-          className="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-slate-800/95 to-slate-900/95 backdrop-blur-lg border-t border-slate-700 z-50"
+          className="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-t border-red-100 z-50 shadow-2xl"
         >
-          <div className="max-w-7xl mx-auto px-4 py-4">
+          <div className="max-w-7xl mx-auto px-4 py-5">
             <div className="flex items-center justify-between">
               {/* Current Radio Info */}
               <div className="flex items-center space-x-4 flex-1 min-w-0">
-                <div className="relative w-14 h-14 flex-shrink-0">
-                  <div className="w-full h-full bg-gradient-to-br from-slate-700 to-slate-800 rounded-lg flex items-center justify-center overflow-hidden border border-slate-600">
+                <div className="relative w-16 h-16 flex-shrink-0">
+                  <div className="w-full h-full bg-gradient-to-br from-red-100 to-red-200 rounded-2xl flex items-center justify-center overflow-hidden border-2 border-red-200 shadow-lg">
                     <Image
                       src={`/logo/${current.id}.jpg`}
                       alt={current.name}
                       fill
-                      className="object-cover"
+                      className="object-cover rounded-2xl"
                       onError={(e) => {
                         const target = e.target as HTMLImageElement;
                         target.style.display = 'none';
                       }}
                     />
-                    <RadioIcon className="w-6 h-6 text-slate-400" />
+                    <RadioIcon className="w-8 h-8 text-red-400" />
                   </div>
 
                   {/* Status indicator */}
@@ -286,33 +293,33 @@ export default function Index() {
                     <motion.div
                       animate={{ scale: [1, 1.2, 1] }}
                       transition={{ duration: 1, repeat: Infinity }}
-                      className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-r from-sky-500 to-orange-500 rounded-full"
+                      className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-br from-red-500 to-red-600 rounded-full shadow-red-lg"
                     />
                   )}
                 </div>
 
                 <div className="min-w-0 flex-1">
-                  <h3 className="font-semibold text-white truncate">
+                  <h3 className="font-bold text-gray-900 truncate text-lg">
                     {current.name}
                   </h3>
-                  <p className="text-sm text-slate-400 truncate">
+                  <p className="text-sm text-gray-600 truncate font-medium">
                     {current.frequency ? `${current.frequency} MHz` : "Online Radio"} • {current.address}
                   </p>
                 </div>
               </div>
 
               {/* Player Controls */}
-              <div className="flex items-center space-x-3 mx-8">
+              <div className="flex items-center space-x-4 mx-8">
                 <button
                   onClick={handlePrev}
-                  className="w-10 h-10 bg-slate-700 hover:bg-slate-600 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-105"
+                  className="w-11 h-11 bg-white hover:bg-red-50 text-red-600 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-md border border-red-100"
                 >
                   <SkipBack className="w-5 h-5" />
                 </button>
 
                 <button
                   onClick={togglePlayPause}
-                  className="w-12 h-12 bg-gradient-to-r from-sky-500 to-orange-500 hover:from-sky-600 hover:to-orange-600 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-105 shadow-lg"
+                  className="w-14 h-14 bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-red-xl"
                 >
                   {isBuffering ? (
                     <Spinner className="w-6 h-6 animate-spin" />
@@ -325,16 +332,22 @@ export default function Index() {
 
                 <button
                   onClick={handleNext}
-                  className="w-10 h-10 bg-slate-700 hover:bg-slate-600 text-white rounded-full flex items-center justify-center transition-all duration-200 hover:scale-105"
+                  className="w-11 h-11 bg-white hover:bg-red-50 text-red-600 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-md border border-red-100"
                 >
                   <SkipForward className="w-5 h-5" />
                 </button>
               </div>
 
-              {/* Volume placeholder */}
+              {/* Status */}
               <div className="flex-1 flex justify-end">
-                <div className="text-xs text-slate-400">
-                  {isPlaying ? 'Now Playing' : isBuffering ? 'Connecting...' : 'Paused'}
+                <div className={`text-sm font-semibold px-4 py-2 rounded-full ${
+                  isPlaying 
+                    ? 'text-red-700 bg-red-100' 
+                    : isBuffering 
+                    ? 'text-orange-700 bg-orange-100' 
+                    : 'text-gray-600 bg-gray-100'
+                }`}>
+                  {isPlaying ? '● Now Playing' : isBuffering ? 'Connecting...' : 'Paused'}
                 </div>
               </div>
             </div>

@@ -1,6 +1,6 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
-import { Delius as Font } from "next/font/google";
+import { Play as Font } from "next/font/google";
 import Head from "next/head";
 import Script from "next/script";
 
