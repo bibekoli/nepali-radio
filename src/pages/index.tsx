@@ -142,7 +142,7 @@ export default function Index() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-sky-400 to-orange-400 bg-clip-text text-transparent">
-                  BiTunes v2
+                  BiTunes
                 </h1>
                 <p className="text-sm text-slate-300">Nepali Radio Stations</p>
               </div>
