@@ -185,7 +185,7 @@ export default function Index() {
               initial={{ x: 20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.3 }}
-              className="hidden sm:flex items-center space-x-2 w-full sm:w-auto justify-center"
+              className="hidden sm:block ml-auto"
             >
               <Button
                 variant="ghost"
