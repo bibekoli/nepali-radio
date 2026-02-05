@@ -46,16 +46,51 @@ export default function RadioCard({ radio, index }: RadioCardProps) {
       transition={{ duration: 0.3, delay: index * 0.05 }}
     >
       <div className={cn(
-        "bg-white rounded-2xl border-2 border-gray-200 p-5 transition-all duration-300 hover:border-red-300 hover:shadow-red-lg",
+        "bg-white rounded-xl sm:rounded-2xl border-2 border-gray-200 p-3 sm:p-5 transition-all duration-300 hover:border-red-300 hover:shadow-red-lg relative",
         isCurrentRadio && "ring-2 ring-red-500 border-red-300 bg-gradient-to-br from-red-50 to-orange-50 shadow-red-lg"
       )}>
-        <div className="flex items-center space-x-5">
+        {/* Action Buttons - Top Right */}
+        <div className="absolute top-3 right-3 flex items-center space-x-2 z-10">
+          <button
+            onClick={handleToggleFavorite}
+            className={cn(
+              "w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-md",
+              isFav
+                ? "bg-gradient-to-br from-red-500 to-red-600 text-white shadow-red-lg"
+                : "bg-white border-2 border-gray-200 text-gray-400 hover:text-red-500 hover:border-red-300"
+            )}
+          >
+            <Heart
+              className={cn(
+                "w-3 h-3 sm:w-4 sm:h-4 transition-all duration-200",
+                isFav && "fill-current"
+              )}
+            />
+          </button>
+
+          <button
+            onClick={handlePlay}
+            className={cn(
+              "px-3 sm:px-4 py-1.5 sm:py-2 rounded-full flex items-center space-x-1 sm:space-x-1.5 transition-all duration-200 hover:scale-105 min-w-[80px] sm:min-w-[100px] justify-center shadow-lg font-semibold text-xs sm:text-sm",
+              isCurrentRadio
+                ? "bg-gradient-to-br from-red-600 to-red-700 text-white shadow-red-xl"
+                : "bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white shadow-red-lg"
+            )}
+          >
+            <Play className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span>
+              {isCurrentRadio ? "Playing" : "Listen"}
+            </span>
+          </button>
+        </div>
+
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-5 pr-0 sm:pr-32">
           {/* Radio Logo */}
-          <div className="relative w-20 h-20 flex-shrink-0">
+          <div className="relative w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0">
             {/* Spinning border for currently playing */}
             {isCurrentRadio && (
               <motion.div
-                className="absolute inset-0 rounded-2xl"
+                className="absolute inset-0 rounded-xl sm:rounded-2xl"
                 style={{
                   background: 'linear-gradient(45deg, #ef4444, #f97316, #ef4444)',
                   backgroundSize: '200% 200%',
@@ -69,25 +104,25 @@ export default function RadioCard({ radio, index }: RadioCardProps) {
                   backgroundPosition: { duration: 2, repeat: Infinity, ease: 'linear' },
                 }}
               >
-                <div className="absolute inset-[2px] rounded-2xl bg-white" />
+                <div className="absolute inset-[2px] rounded-xl sm:rounded-2xl bg-white" />
               </motion.div>
             )}
             
             <div className={cn(
-              "relative w-full h-full bg-gradient-to-br from-red-100 to-red-200 rounded-2xl flex items-center justify-center overflow-hidden shadow-md",
+              "relative w-full h-full bg-gradient-to-br from-red-100 to-red-200 rounded-xl sm:rounded-2xl flex items-center justify-center overflow-hidden shadow-md",
               isCurrentRadio ? "border-0" : "border-2 border-red-200"
             )}>
               <Image
                 src={`/logo/${radio.id}.jpg`}
                 alt={radio.name}
                 fill
-                className="object-cover rounded-2xl"
+                className="object-cover rounded-xl sm:rounded-2xl"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   target.style.display = 'none';
                 }}
               />
-              <Radio className="w-10 h-10 text-red-300" />
+              <Radio className="w-8 h-8 sm:w-10 sm:h-10 text-red-300" />
             </div>
 
             {/* Playing indicator */}
@@ -95,63 +130,28 @@ export default function RadioCard({ radio, index }: RadioCardProps) {
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className="absolute -top-2 -right-2 w-7 h-7 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center shadow-red-md z-10"
+                className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 w-6 h-6 sm:w-7 sm:h-7 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center shadow-red-md z-10"
               >
                 <motion.div
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ duration: 1, repeat: Infinity }}
-                  className="w-2.5 h-2.5 bg-white rounded-full"
+                  className="w-2 h-2 sm:w-2.5 sm:h-2.5 bg-white rounded-full"
                 />
               </motion.div>
             )}
           </div>
 
           {/* Radio Info */}
-          <div className="flex-1 min-w-0">
-            <h3 className="font-bold text-gray-900 truncate text-xl">
+          <div className="flex-1 min-w-0 w-full sm:w-auto">
+            <h3 className="font-bold text-gray-900 truncate text-lg sm:text-xl">
               {radio.name}
             </h3>
-            <p className="text-base text-red-600 font-semibold mt-1">
+            <p className="text-sm sm:text-base text-red-600 font-semibold mt-0.5 sm:mt-1">
               {formatFrequency(radio.frequency)}
             </p>
-            <p className="text-sm text-gray-600 truncate mt-1">
+            <p className="text-xs sm:text-sm text-gray-600 truncate mt-0.5 sm:mt-1">
               {radio.address}
             </p>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex items-center space-x-3">
-            <button
-              onClick={handleToggleFavorite}
-              className={cn(
-                "w-12 h-12 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 shadow-md",
-                isFav
-                  ? "bg-gradient-to-br from-red-500 to-red-600 text-white shadow-red-lg"
-                  : "bg-white border-2 border-gray-200 text-gray-400 hover:text-red-500 hover:border-red-300"
-              )}
-            >
-              <Heart
-                className={cn(
-                  "w-5 h-5 transition-all duration-200",
-                  isFav && "fill-current"
-                )}
-              />
-            </button>
-
-            <button
-              onClick={handlePlay}
-              className={cn(
-                "px-6 py-3 rounded-full flex items-center space-x-2 transition-all duration-200 hover:scale-105 min-w-[120px] justify-center shadow-lg font-semibold",
-                isCurrentRadio
-                  ? "bg-gradient-to-br from-red-600 to-red-700 text-white shadow-red-xl"
-                  : "bg-gradient-to-br from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white shadow-red-lg"
-              )}
-            >
-              <Play className="w-5 h-5" />
-              <span className="text-sm">
-                {isCurrentRadio ? "Playing" : "Listen"}
-              </span>
-            </button>
           </div>
         </div>
       </div>
