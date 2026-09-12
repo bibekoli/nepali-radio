@@ -1,20 +1,15 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
-import { Play as Font } from "next/font/google";
 import Head from "next/head";
 import Script from "next/script";
-
-const font = Font({
-  subsets: ["latin"],
-  weight: ["400"]
-});
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <title>BiTunes - Listen Nepali Radio</title>
-        <meta name="description" content="Listen to your favorite Nepali radio stations with a modern, elegant interface. Stream live radio from Nepal with advanced features." />
+        <title>BiTunes — Nepal sounds better live</title>
+        <meta name="description" content="Discover and stream live Nepali radio stations, music, news and stories from across the country." />
+        <meta name="theme-color" content="#101b24" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -27,7 +22,7 @@ export default function App({ Component, pageProps }: AppProps) {
           })(window, document, "clarity", "script", "v0e8tocogz");
         `}
       </Script>
-      <main className={font.className}>
+      <main>
         <Component {...pageProps} />
       </main>
     </>
